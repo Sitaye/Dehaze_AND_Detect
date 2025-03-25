@@ -62,7 +62,7 @@ def main(args):
             img_save(fuse_img_process, save_path)
 
     # 释放资源
-    # fusemodel.release()
+    fusemodel.release()
 
 
 def parse_options():
