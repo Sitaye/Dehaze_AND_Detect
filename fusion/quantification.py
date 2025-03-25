@@ -7,6 +7,7 @@ import argparse
 from typing import List
 H = 540
 W = 960
+
 def main(args):
 
     algorithm1 = args.algorithm
