@@ -20,10 +20,8 @@ def main(args):
     export_model_name = args.model_path
 
     fusemodel = RKNN(verbose=False)
-    fusemodel.config(target_platform='rk3588',quant_img_RGB2BGR=False,)
+    fusemodel.config(target_platform='rk3588', quant_img_RGB2BGR=False,)
     fusemodel.load_rknn(export_model_name)
-
-    
 
     fusemodel.init_runtime(target=target1)
 
@@ -53,6 +51,7 @@ if __name__ == '__main__':
     parser.add_argument('--ir_path', type=str, default='./test_imgs/ir', help="红外图像")
     parser.add_argument('--res_path', type=str, default='./test_imgs/fuse', help='保存结果')
     parser.add_argument('--model_path', type=str, default='./fuseint8_v3.rknn', help='模型文件')
+    parser.add_argument('--rknn_batch', type=int, default=1, help='rknn batch size')
     args = parser.parse_args()
 
     main(args=args)
