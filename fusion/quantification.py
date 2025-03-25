@@ -19,9 +19,9 @@ def main():
     datasets1 = './datasets.txt'
     target1 = None
 
-    vi_path = './test_imgs/vi'
-    ir_path = './test_imgs/ir'
-    res_path = './test_imgs/fuse'
+    vi_path = './data/vi'
+    ir_path = './data/ir'
+    res_path = './data/fuse'
 
     process_type = 'img'
     export_model_name = './fuseint8_v3.rknn'
