@@ -67,7 +67,7 @@ def main(args):
 
 def parse_options():
     parser = argparse.ArgumentParser(description='红外和热成像融合算法')
-    parser.add_argument('--model_path', type=str, default='./models/fuse.rknn', help='模型文件路径')
+    parser.add_argument('--model_path', type=str, default='./models/rknn/fuse.rknn', help='模型文件路径')
     parser.add_argument('--target', type=str, default='rk3588', help='硬件平台 "rk3588", ...')
     parser.add_argument('--rknn_batch', type=int, default=None, help='多批次')
     parser.add_argument('--infrared_path', type=str, default='./imgs/infrared', help='红外图像路径')
