@@ -1,23 +1,55 @@
 import cv2
 import numpy as np
-import os
 
 H = 540
 W = 960
-TYPE = None
 
-def img_save(img: np.ndarray, save_path: str, is_BRG=True, is_int8=True):
+
+def img_read(path: str, is_single=False, is_int8=False) -> np.ndarray:
+    """
+    返回单通道图像或者三通道图像
+
+    Args:
+        path (str): 图像路径
+        is_single (bool): 是否为单通道图像
+        is_int8 (bool): 是否保持图像为 int8 类型
+
+    Returns:
+        np.ndarray: 处理后的图像
+    """
+    if is_single:
+        img = cv2.imread(path, cv2.IMREAD_GRAYSCALE)
+        img = cv2.resize(img, (W, H), interpolation=cv2.INTER_LANCZOS4)
+        img = np.expand_dims(np.expand_dims(img, axis=0), axis=0)
+    else:
+        img = cv2.imread(path)
+        img = cv2.resize(img, (W, H), interpolation=cv2.INTER_LANCZOS4)
+
+    if not is_int8:
+        img = img.astype(np.float32) / 255.0
+            
+    return img
+
+
+def img_save(img: np.ndarray, save_path: str, is_BGR=True, is_int8=True):
+    """
+    保存图像到指定路径。
+
+    Args:
+        img (np.ndarray): 输入图像
+        save_path (str): 保存路径
+        is_BGR (bool): 是否保存为 BGR 格式
+        is_int8 (bool): 是否将图像保存为 uint8 类型
+    """
     if len(img.shape) == 4 and img.shape[0] == 1 and img.shape[1] == 1:
-        img = np.squeeze(img, axis=(0, 1))
+        img = np.squeeze(img, axis=(0, 1))  # (1, 1, H, W) -> (H, W)
     elif len(img.shape) == 3 and img.shape[0] == 3:
-        img = np.transpose(1, 2, 0)
+        img = np.transpose(img, (1, 2, 0))  # (3, H, W) -> (H, W, 3)
 
     if is_int8:
-        img = np.clip(img*255.0, 0, 255).astype(np.uint8)
-    else:
-        img = np.clip(img, 0, 255).astype(np.uint8)
+        img = np.clip(img * 255.0, 0, 255).astype(np.uint8)
 
-    if not is_BRG:
+    if not is_BGR:
         img = cv2.cvtColor(img, cv2.COLOR_RGB2BGR)
     elif len(img.shape) == 2 or img.shape[2] == 1:
         img = cv2.cvtColor(img, cv2.COLOR_GRAY2BGR)
@@ -25,39 +57,20 @@ def img_save(img: np.ndarray, save_path: str, is_BRG=True, is_int8=True):
     cv2.imwrite(save_path, img)
 
 
-def img_read(path : str, is_single=False, is_vis=False, is_int8=False) -> np.ndarray:
+def BGR2YCrCb(img: np.ndarray):
+    """
+    将 BGR 图像转换为 YCrCb 色彩空间，并分离通道。
 
-    '''
-    return img：灰度图像 维度(1, 1, H, W) 或 三通道图像 BGR 维度(H, W, C)
-    '''
+    Args:
+        img (np.ndarray): 输入的 BGR 图像，(H, W, 3)
 
-    if is_single:
-        img = cv2.imread(path)
-        img = cv2.resize(img, (W, H), interpolation=cv2.INTER_LANCZOS4)
-        #img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
-    else:
-        if is_vis:
-            img = cv2.imread(path)
-            img = cv2.resize(img, (W, H), interpolation=cv2.INTER_LANCZOS4)
-            #img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
-        else:
-            img = cv2.imread(path, cv2.IMREAD_GRAYSCALE)
-            img = cv2.resize(img, (W, H), interpolation=cv2.INTER_LANCZOS4)
-            img = np.expand_dims(np.expand_dims(img, axis=0), axis=0)
-    if not is_int8:
-        img = img.astype(np.float32) / 255.0
-    return img
-
-def get_img_list(path: str):
-    return [os.path.join(path, i) for i in os.listdir(path)]
-
-
-def BGR2YCrCb(img : np.ndarray):
-
+    Returns:
+        Y (np.ndarray): 亮度通道，(1, 1, H, W)
+        Cr (np.ndarray): 红色色度偏移通道，(H, W)
+        Cb (np.ndarray): 蓝色色度偏移通道，(H, W)
+    """
     if img.dtype != np.float32:
         img = img.astype(np.float32)
-    # if img.shape[-1] == 3:
-    #     img = cv2.cvtColor(img, cv2.COLOR_RGB2BGR)
 
     img = cv2.cvtColor(img, cv2.COLOR_BGR2YCrCb)
     Y, Cr, Cb = cv2.split(img)
@@ -67,30 +80,20 @@ def BGR2YCrCb(img : np.ndarray):
 
 
 def YCrCb2BGR(Y: np.ndarray, Cr: np.ndarray, Cb: np.ndarray) -> np.ndarray:
-    
-    Y = np.squeeze(np.squeeze(Y, axis=0), axis=0)
-    img = cv2.merge([Y, Cr, Cb])
+    """
+    将 YCrCb 通道合并并转换为 BGR 图像。
 
-    img = cv2.cvtColor(img, cv2.COLOR_YCrCb2RGB)
+    Args:
+        Y (np.ndarray): 亮度通道，(1, 1, H, W)
+        Cr (np.ndarray): 红色色度偏移通道，(H, W)
+        Cb (np.ndarray): 蓝色色度偏移通道，(H, W)
+
+    Returns:
+        img (np.ndarray): 转换后的 BGR 图像，形状为 (H, W, 3)
+    """
+    Y = np.squeeze(np.squeeze(Y, axis=0), axis=0)
+
+    img = cv2.merge([Y, Cr, Cb])
+    img = cv2.cvtColor(img, cv2.COLOR_YCrCb2BGR)
 
     return img
-
-
-
-
-
-def ImgFuse(ir, vi):
-
-    '''
-    ir (channels, height, width)
-    vi (channels, height, width)
-    '''
-
-    fuse_img = None
-    return fuse_img
-
-
-def PredModel(img):
-
-    results = None
-    return results
