@@ -1,8 +1,6 @@
 import cv2
 import numpy as np
-from typing import Dict
 import os
-import sys
 
 H = 540
 W = 960
