@@ -1,18 +1,15 @@
 import os
-import argparse
 import numpy as np
 from tqdm import tqdm
 from rknn.api import RKNN
 
-from utils import img_read, img_save, BGR2YCrCb, YCrCb2BGR
-
+from utils import load_model, img_read, img_save, BGR2YCrCb, YCrCb2BGR
 
 def main(args):
 
     # 加载模型
-    fusemodel = RKNN()
-    fusemodel.load_rknn(args.model_path)
-    fusemodel.init_runtime(
+    fusemodel = load_model(
+        model_path=args.model_path,
         target=args.target,
         core_mask=RKNN.NPU_CORE_0_1_2,
     )
@@ -64,6 +61,7 @@ def main(args):
 
 
 def parse_options():
+    import argparse
     parser = argparse.ArgumentParser(description='红外和热成像融合算法')
     parser.add_argument('--model_path', type=str, default='./models/rknn/fuse.rknn', help='模型文件路径')
     parser.add_argument('--target', type=str, default='rk3588', choices=["rk3588", "..."], help='硬件平台')

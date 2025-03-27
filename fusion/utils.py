@@ -1,9 +1,34 @@
 import cv2
 import numpy as np
+from rknn.api import RKNN
 
+# 图像大小
 H = 540
 W = 960
 
+def load_model(model_path: str, target: str='rk3588', core_mask: int=RKNN.NPU_CORE_0_1_2, do_perf_debug=False, do_eval_mem=False) -> RKNN:
+    """
+    加载模型
+    
+    Args:
+        model_path (str): 目标模型文件的位置
+        target (str): 运行的硬件平台
+        core_mask (int): NPU 核心掩码
+        do_perf_debug (bool): 是否进行性能分析，调用 `rknn.val_perf()` 接口可以获取模型运行的总时间
+        do_eval_mem (bool): 是否进行内存评估模式，调用 `rknn.eval_memory()` 接口获取模型运行时的内存使用情况
+
+    Returns:
+        RKNN: 返回模型
+    """
+    rknn = RKNN()
+    rknn.load_rknn(model_path)
+    rknn.init_runtime(
+        target=target,
+        perf_debug=do_perf_debug,
+        core_mask=core_mask,
+        eval_mem=do_eval_mem,
+    )
+    return rknn
 
 def img_read(path: str, is_single=False, is_int8=False) -> np.ndarray:
     """

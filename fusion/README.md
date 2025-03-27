@@ -16,7 +16,7 @@ python quantize.py
 
 ### 模型推理
 ```shell
-python infer.py
+python infer.py | infer_multi_thread.py
     --model_path MODEL_PATH       模型文件路径
     --target {rk3588,...}         硬件平台
     --rknn_batch RKNN_BATCH      模型批次
