@@ -19,7 +19,7 @@ python quantize.py
 python infer.py | infer_multi_thread.py
     --model_path MODEL_PATH       模型文件路径
     --target {rk3588,...}         硬件平台
-    --rknn_batch RKNN_BATCH      模型批次
+    --rknn_batch RKNN_BATCH       模型批次
     --infrared_path INFRARED_PATH 红外图像路径
     --thermal_path THERMAL_PATH   热成像图像路径
     --results_path RESULTS_PATH   融合结果保存路径
