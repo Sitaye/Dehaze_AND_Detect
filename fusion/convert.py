@@ -3,8 +3,9 @@ from typing import List
 from rknn.api import RKNN
 
 # 图像大小
-H = 540
-W = 960
+H = 480
+W = 854
+
 
 def main(args):
 
@@ -33,7 +34,6 @@ def main(args):
     ret = fusemodel.build(
         do_quantization=args.do_quatize,
         dataset=args.dataset_file,
-        rknn_batch_size=args.batch_size,
     )
     if ret != 0:
         print('Build model failed!')
@@ -59,13 +59,12 @@ def parse_options():
     parser.add_argument('--algorithm', type=str, default='normal', choices=['normal', 'mmse', 'kl_divergence'], help='量化算法')
     parser.add_argument('--method', type=str, default='channel', choices=['channel', 'layer'], help='量化方法')
     parser.add_argument('--target', type=str, default='rk3588', choices=['rk3588', '...'], help='硬件平台')
-    parser.add_argument('--do_pruning', type=bool, default=False, choices=['True', 'False'], help='是否剪枝')
-    parser.add_argument('--model_path', type=str, default='./models/origin/fusescript.pt', help='源模型路径')
+    parser.add_argument('--do_pruning', type=bool, default=True, choices=['True', 'False'], help='是否剪枝')
+    parser.add_argument('--model_path', type=str, default='./fusion/models/origin/fusescript.pt', help='源模型路径')
     parser.add_argument('--input_format',type=List[List[int]], default=[[1, 1, H, W], [1, 1, H, W]], help='数据输入格式')
-    parser.add_argument('--do_quatize', type=bool, default=False, choices=['True', 'False'], help='是否量化')
-    parser.add_argument('--dataset_file', type=str, default='./dataset.txt', help='量化数据集组织文件')
-    parser.add_argument('--batch_size', type=int, default=None, help='模型批次')
-    parser.add_argument('--export_model_name', type=str, default='./models/rknn/fuse.rknn', help='模型导出路径')
+    parser.add_argument('--do_quatize', type=bool, default=True, choices=['True', 'False'], help='是否量化')
+    parser.add_argument('--dataset_file', type=str, default='./fusion/dataset.txt', help='量化数据集组织文件')
+    parser.add_argument('--export_model_name', type=str, default='./fusion/models/rknn/fuse_int8_resize.rknn', help='模型导出路径')
     args = parser.parse_args()
     return args
 
