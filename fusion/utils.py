@@ -82,7 +82,7 @@ def img_save(img: np.ndarray, save_path: str, is_BGR=True, is_int8=True) -> None
     cv2.imwrite(save_path, img)
 
 
-def BGR2YCrCb(img: np.ndarray) -> tuple[np.ndarray]:
+def BGR2YCrCb(img: np.ndarray) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
     """
     将 BGR 图像转换为 YCrCb 色彩空间，并分离通道。
 
