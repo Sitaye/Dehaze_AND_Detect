@@ -5,7 +5,7 @@ import numpy as np
 from tqdm import tqdm
 from threading import Lock
 from concurrent.futures import ThreadPoolExecutor
-from utils import YCrCb2RGB, draw, load_model, img_read, BGR2YCrCb, yolov5_post_process
+from fusion.utils import YCrCb2RGB, draw, load_model, img_read, BGR2YCrCb, yolov5_post_process
 
 
 class FusionPipeline:
