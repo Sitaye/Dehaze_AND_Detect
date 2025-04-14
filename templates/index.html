@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>“双瞳探焰，雾中搜生”</title>
+  <style>
+    :root {
+      --primary: #2196f3;
+      --primary-dark: #1976d2;
+      --secondary: #4caf50;
+      --secondary-dark: #388e3c;
+      --danger: #f44336;
+      --danger-light: #ffebee;
+      --success: #4caf50;
+      --success-light: #e8f5e9;
+      --bg: #f7f9fc;
+      --text-dark: #263238;
+      --text-light: #eceff1;
+      --border-radius: 12px;
+    }
+
+    body {
+      font-family: 'Segoe UI', 'Roboto', Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: var(--bg);
+      color: var(--text-dark);
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+    }
+
+    .header {
+      flex-shrink: 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 40px;
+      background-color: #fff;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+      position: relative;
+    }
+
+    .logo-container {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: bold;
+      font-size: 1.5em;
+    }
+
+    .logo-container img {
+      height: 60px;
+    }
+
+    .header-buttons {
+      display: flex;
+      gap: 12px;
+    }
+
+    .header-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 10px 18px;
+      background-color: var(--primary);
+      border: none;
+      color: white;
+      border-radius: 20px;
+      cursor: pointer;
+      font-size: 16px;
+      transition: background 0.3s ease;
+    }
+
+    .header-btn:hover {
+      background-color: var(--primary-dark);
+    }
+
+    .upload-icon {
+      width: 18px;
+      height: 18px;
+    }
+
+    .main-container {
+      display: flex;
+      gap: 20px;
+      padding: 20px;
+      max-width: 2000px;
+      margin: auto;
+      flex-wrap: wrap;
+      width: 95%;
+      align-items: flex-start;
+    }
+
+    .function-panel {
+      flex: 0 1 220px;
+      background: #f0f4f8;
+      border-radius: var(--border-radius);
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+      min-width: 180px;
+    }
+
+    .function-btn {
+      height: 60px;
+      background-color: var(--primary);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+      text-align: center;
+      transition: all 0.3s ease;
+    }
+
+    .function-btn:hover,
+    .function-btn.active {
+      background-color: var(--primary-dark);
+    }
+
+    .video-section {
+      flex: 2 1 650px;
+      min-width: 400px;
+      background: white;
+      border-radius: var(--border-radius);
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .video-container {
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      background: #f2f5f9;
+      border-radius: var(--border-radius);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-bottom: 10px;
+      overflow: hidden;
+    }
+
+    #videoStream {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+
+    .controls {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .buttons {
+      display: flex;
+      gap: 10px;
+    }
+
+    .controls button {
+      padding: 10px 20px;
+      font-size: 14px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      color: white;
+      background-color: var(--secondary);
+      transition: background 0.3s ease;
+    }
+
+    .controls button:hover {
+      background-color: var(--secondary-dark);
+    }
+
+    .controls button:disabled {
+      background-color: #b0bec5;
+      cursor: not-allowed;
+    }
+
+    .alert-section {
+      flex: 1 1 100px;
+      background-color: white;
+      border-radius: var(--border-radius);
+      padding: 15px;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+      min-width: 250px;
+      max-height: 720px;
+    }
+
+    .alert-header {
+      font-weight: 600;
+      margin-bottom: 10px;
+    }
+
+    #alertContainer {
+      flex: 1;
+      overflow-y: auto;
+      padding-right: 10px;
+    }
+
+    .alert-item {
+      padding: 20px;
+      margin-bottom: 10px;
+      border-left: 4px solid var(--danger);
+      background-color: var(--danger-light);
+      border-radius: 6px;
+      font-size: 14px;
+      transition: transform 0.2s ease;
+    }
+
+    .alert-item.no-detection {
+      border-left-color: var(--success);
+      background-color: var(--success-light);
+    }
+
+    .alert-item:hover {
+      transform: translateY(-2px);
+    }
+
+    @media (max-width: 1000px) {
+      .main-container {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .function-panel {
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+
+      .function-btn {
+        flex: 1 1 45%;
+        margin: 5px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <div class="logo-container">
+      <img src="/static/logo.png" alt="Logo" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=&quot;http://www.w3.org/2000/svg&quot; width=&quot;120&quot; height=&quot;40&quot;><text x=&quot;10&quot; y=&quot;25&quot; font-family=&quot;Arial&quot; font-size=&quot;16&quot; fill=&quot;%233498db&quot;>LOGO</text></svg>'">
+      <small>“双瞳探焰，雾中搜生”—基于深度学习的双模态图像去烟与融合的火场人体识别系统</small>
+    </div>
+    <div class="header-buttons">
+      <button class="header-btn" id="headerBtn1">
+        <img src="/static/upload.svg" alt="文件上传" class="upload-icon" />
+        上传红外视频
+      </button>
+      <button class="header-btn" id="headerBtn2">
+        <img src="/static/upload.svg" alt="文件上传" class="upload-icon" />
+        上传热成像视频
+      </button>
+    </div>
+  </div>
+
+  <div class="main-container">
+    <div class="function-panel">
+      <button class="function-btn" id="func1">原始红外视频</button>
+      <button class="function-btn" id="func2">原始热成像视频</button>
+      <button class="function-btn" id="func3">红外去烟</button>
+      <button class="function-btn" id="func4">融合 + 识别</button>
+      <button class="function-btn" id="func5">去烟 + 融合 + 识别</button>
+      <button class="function-btn" id="func6">去烟 + 配准 + 融合 + 识别</button>
+    </div>
+
+    <div class="video-section">
+      <p id="frameRate" style="font-size: 20px; margin: 5px 0px;">Frame Rate: - FPS</p>
+      <div class="video-container">
+        <img id="videoStream" src="/static/placeholder.jpg" alt="Video Stream">
+      </div>
+      <div class="controls">
+        <div class="buttons">
+          <button id="startBtn" onclick="startStream()">开始传输</button>
+          <button id="stopBtn" onclick="stopStream()" disabled>停止传输</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="alert-section">
+      <div class="alert-header">检测警告</div>
+      <div id="alertContainer"></div>
+    </div>
+  </div>
+  <script>
+    let eventSource, frameCounter = 0, currentMethod = null;
+
+    function startStream() {
+      if (!currentMethod) return alert('请选择功能');
+
+      document.getElementById('startBtn').disabled = true;
+      document.getElementById('stopBtn').disabled = false;
+      frameCounter = 0;
+
+      fetch(`/start_stream?method=${currentMethod}`, { method: 'POST' })
+        .then(res => res.ok ? connectEventSource() : alert('启动失败'));
+    }
+
+    function stopStream() {
+      document.getElementById('startBtn').disabled = false;
+      document.getElementById('stopBtn').disabled = true;
+      if (eventSource) eventSource.close();
+      fetch('/stop_stream', { method: 'POST' });
+    }
+
+    function connectEventSource() {
+      eventSource = new EventSource('/stream');
+      eventSource.onmessage = function(event) {
+        const data = JSON.parse(event.data);
+        if (data.frame) {
+          document.getElementById('videoStream').src = 'data:image/jpeg;base64,' + data.frame;
+          frameCounter++;
+        }
+        if (data.frame_rate !== undefined) {
+          document.getElementById('frameRate').innerText = `Frame Rate: ${parseFloat(data.frame_rate).toFixed(2)} FPS`;
+        }
+        if (data.detection_boxes_length && frameCounter % 8 === 0) {
+          addAlertItem(data.detection_boxes_length);
+        }
+      };
+      eventSource.onerror = function() {
+        eventSource.close();
+        stopStream();
+      };
+    }
+
+    function addAlertItem(count) {
+      const now = new Date();
+      const item = document.createElement('div');
+      item.className = count > 0 ? 'alert-item' : 'alert-item no-detection';
+      item.textContent = `[${now.toLocaleDateString()} ${now.toLocaleTimeString()}] ${count > 0 ? '检测到被困人员' : '未检测到被困人员'}`;
+      const container = document.getElementById('alertContainer');
+      container.appendChild(item);
+      container.scrollTop = container.scrollHeight;
+      if (container.children.length > 50) container.removeChild(container.firstChild);
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const buttons = document.querySelectorAll('.function-btn');
+      buttons.forEach((btn, idx) => {
+        btn.addEventListener('click', () => {
+          buttons.forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          currentMethod = idx + 1;
+        });
+      });
+
+      const infraredInput = Object.assign(document.createElement('input'), { type: 'file', id: 'infraredUpload', style: 'display:none' });
+      infraredInput.addEventListener('change', () => uploadVideo('infraredUpload', '/upload/infrared'));
+      document.body.appendChild(infraredInput);
+
+      const thermalInput = Object.assign(document.createElement('input'), { type: 'file', id: 'thermalUpload', style: 'display:none' });
+      thermalInput.addEventListener('change', () => uploadVideo('thermalUpload', '/upload/thermal'));
+      document.body.appendChild(thermalInput);
+
+      document.getElementById('headerBtn1').onclick = () => infraredInput.click();
+      document.getElementById('headerBtn2').onclick = () => thermalInput.click();
+    });
+
+    function uploadVideo(inputId, url) {
+      const file = document.getElementById(inputId).files[0];
+      if (!file) return alert('请选择视频');
+      const formData = new FormData();
+      formData.append('file', file);
+      fetch(url, { method: 'POST', body: formData })
+        .then(() => alert('上传成功'))
+        .catch(() => alert('上传失败'));
+    }
+  </script>
+</body>
+</html>

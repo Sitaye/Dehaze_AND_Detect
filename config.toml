@@ -1,31 +1,34 @@
-[general]
-mode = "frame" # frame=帧图像（测试用），video=视频文件，stream=视频流
-
 [rknn]
 target = "rk3588"
+
 [rknn.model.fuse]
-path = "./model/rknn/fuse_kl_int8_480x854.rknn"
+path = "models/fuse.rknn"
+
+[rknn.model.dehaze]
+path = "models/dehaze.rknn"
+
 [rknn.model.yolo]
 conf_threshold = 0.6
-path = "./model/rknn/yolo11n_f16_aug2_nir.rknn"
+path = "models/yolo11n.rknn"
 
 [thread]
-maxsize=300
-[thread.infer]
-max_workers = 3
+maxsize = 120
+max_workers = 20
+
+[thread.dehaze]
+max_workers = 2
+
+[thread.fuse]
+max_workers = 2
+
 [thread.detect]
-max_workers = 9
+max_workers = 2
 
 [output]
 H = 480
 W = 854
 IMG_SIZE = 640
-FPS = 25
-[output.path]
-results = "./data/results"
-[output.path.image]
-infrared = "./data/imgs/infrared"
-thermal = "./data/imgs/thermal"
+
 [output.path.video]
-infrared = "./data/videos/infrared.mp4"
-thermal = "./data/videos/thermal.mp4"
+infrared = "videos/smoked_rgb25.mp4"
+thermal = "videos/smoked_tr30.mp4"
