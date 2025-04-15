@@ -1,6 +1,6 @@
 # “双瞳探焰，雾中搜生”—基于深度学习的双模态图像去烟与融合的火场人体识别系统
 
-本项目为大学生服务外包创新创业大赛选题【A25】浓烟环境人体目标判别【中电海康】的项目仓库
+本项目为大学生服务外包创新创业大赛选题【A25】浓烟环境人体目标判别【中电海康】的项目仓库。
 
 ## Overview
 
@@ -20,6 +20,7 @@ app/                                    # 项目根目录
 │   ├── infrared_origin.py              # 原始红外
 │   └── thermal_origin.py               # 原始热成像
 ├── README.md                           # README 文件
+├── requirements.txt                    # 依赖库
 ├── static/                             # 静态文件
 │   ├── logo.png                        # 项目 Logo
 │   ├── placeholder.jpg                 # 视频占位符
@@ -41,6 +42,8 @@ cd Dehaze_AND_Detect
 
 ### 2. Install Dependencies
 
+Ensure you have Python 3.10 or higher installed.
+
 ```shell
 pip install -r requirements.txt
 ```
@@ -49,4 +52,13 @@ pip install -r requirements.txt
 
 ```python
 python app.py
+```
+
+You will see
+
+```shell
+INFO:     Started server process [PID]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
 ```
