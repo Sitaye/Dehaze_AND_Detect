@@ -1,4 +1,4 @@
-# “双瞳探焰，雾中搜生”—基于深度学习的双模态图像去烟与融合的火场人体识别系统
+# “双瞳探焰，雾中搜生”—基于深度学习的双模态图像去烟与融合的火场人体识别系统（国家级二等奖）
 
 本项目为大学生服务外包创新创业大赛选题【A25】浓烟环境人体目标判别【中电海康】的项目仓库。
 
@@ -36,8 +36,8 @@ app/                                    # 项目根目录
 ### 1. Clone the Repository
 
 ```shell
-git clone https://github.com/Sitaye/Dehaze_AND_Detect
-cd Dehaze_AND_Detect
+git clone https://github.com/Sitaye/Dehaze_AND_Detect.git
+cd Dehaze_AND_Detect/
 ```
 
 ### 2. Install Dependencies
